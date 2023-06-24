@@ -2,8 +2,12 @@ const { Op } = require("sequelize");
 
 /**
  * @returns contract by id for a specific profile
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
  */
 const getContractById = async (req, res) => {
+
     const { Contract } = req.app.get('models');
     const { id } = req.params;
     const profileId = Number(req.get('profile_id'));
@@ -30,8 +34,12 @@ const getContractById = async (req, res) => {
 
 /**
  * @returns contracts for a specific profile
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
  */
 const getContracts = async (req, res) => {
+
     const { Contract } = req.app.get('models');
     const profileId = Number(req.get('profile_id'));
 

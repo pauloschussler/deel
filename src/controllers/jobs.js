@@ -1,14 +1,16 @@
 const { Op } = require("sequelize");
 
+const { checkBalance, addBalance, removeBalance } = require('./profiles');
 /**
  * @returns unpaid jobs for a specific profile
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
  */
 const getUnpaidJobs = async (req, res) => {
 
-    const { Job } = req.app.get('models');
-    const { Contract } = req.app.get('models');
-
     const profileId = Number(req.get('profile_id'));
+    const { Job } = req.app.get('models');
 
     try {
         const jobs = await Job.findAll({
@@ -38,16 +40,20 @@ const getUnpaidJobs = async (req, res) => {
     }
 };
 
+/**
+ * Process payment for a job, deducting the job value from the contractor's balance
+ * and adding it to the client's balance.
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 const payJob = async (req, res) => {
 
-    const { Job } = req.app.get('models');
-    const { Contract } = req.app.get('models');
-    const { Profile } = req.app.get('models');
+    const { Contract, Job } = req.app.get('models');
 
     const { job_id } = req.params;
 
     try {
-        // Find the job by its ID
         const job = await Job.findByPk(job_id);
 
         if (!job) {
@@ -55,22 +61,21 @@ const payJob = async (req, res) => {
             return res.status(404).json({ success: true, message: 'Record not found' });
         }
 
-        const contract = await Contract.findByPk(job.ContractId);
-        const contractor = await Profile.findByPk(contract.ContractorId);
-        const client = await Profile.findByPk(contract.ClientId);
+        if (job.paid === true) {
 
-        if (!checkBalance(job, contractor)) {
+            return res.status(404).json({ success: true, message: 'Job is already paid' });
+        }
+
+        const contract = await Contract.findByPk(job.ContractId);
+
+        if (! await checkBalance(contract.ContractorId, job.price)) {
 
             return res.status(404).json({ success: true, message: 'Insufficient balance' });
         }
 
-        contractor.balance -= job.price;
-        client.balance += job.price;
-
-        await Promise.all([contractor.save(), client.save()]);
-
-        job.paid = true;
-        await job.save();
+        await removeBalance(contract.ContractorId, job.price);
+        await addBalance(contract.ClientId, job.price);
+        await confirmPayment(job);
 
         res.json({ success: true, message: 'Job payment successful' });
     } catch (error) {
@@ -80,10 +85,14 @@ const payJob = async (req, res) => {
     }
 };
 
-const checkBalance = (job, contractor) => {
-
-    return contractor.balance >= job.price;
-}
+/**
+ * Confirm the payment of a job by setting the paid flag to true
+ * @param {Object} job - The job to confirm payment for
+ */
+const confirmPayment = async (job) => {
+    job.paid = true;
+    await job.save();
+};
 
 module.exports = {
     getUnpaidJobs, payJob
