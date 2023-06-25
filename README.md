@@ -21,10 +21,39 @@ The exercise requires [Node.js](https://nodejs.org/en/) to be installed. We reco
 I have made some modifications to the project by implementing the use of routes and controllers. This helps improve code organization and maintainability. By separating the logic into different controllers and defining routes for each functionality, the code becomes more modular and easier to understand.
 I have also made some modifications to the getProfile middleware without changing its logic.
 
-Besides that, I have also made a small change to the GET and POST methods. The GET method now returns a JSON object with three parameters: 'success', 'total', and 'data'. This change is illustrated in the following image: 
+Besides that, I have also made a small change to the GET and POST methods. The GET method now returns a JSON object with three parameters: 'success', 'total', and 'data'. This change is illustrated in the following return: 
 
-And The POST method now returns a JSON object with three parametesr: 'success', 'message' and 'error'. This change is illustrated in the following images`:
+```
+{
+    "success": true,
+    "total": 1,
+    "data": [
+        {
+            "profession": "Programmer",
+            "amountPaid": 3086
+        }
+    ]
+}
+```
 
+And The POST method now returns a JSON object with three parametesr: 'success', 'message' and 'error'. This change is illustrated in the following returns`:
+
+```
+{
+    "success": false,
+    "message": "Job is already paid"
+}
+
+{
+    "success": false,
+    "message": "Deposit amount is required"
+}
+
+{
+    "success": true,
+    "message": "Deposit successful"
+}
+```
 
 #### API's
 
