@@ -14,7 +14,7 @@ const addBalance = async (profileId, value) => {
     try {
         const profile = await Profile.findByPk(profileId);
         if (!profile) {
-            throw new Error(`Profile with ID ${profileId} not found`);
+            throw new Error('Profile with ID ${profileId} not found');
         }
 
         profile.balance += value;
@@ -37,7 +37,7 @@ const removeBalance = async (profileId, value) => {
     try {
         const profile = await Profile.findByPk(profileId);
         if (!profile) {
-            throw new Error(`Profile with ID ${profileId} not found`);
+            throw new Error('Profile with ID ${profileId} not found');
         }
 
         if (profile.balance < value) {
@@ -65,7 +65,7 @@ const checkBalance = async (profileId, value) => {
     try {
         const profile = await Profile.findByPk(profileId);
         if (!profile) {
-            throw new Error(`Profile with ID ${profileId} not found`);
+            throw new Error('Profile with ID ${profileId} not found');
         }
 
         return profile.balance >= value;
@@ -91,7 +91,7 @@ const checkDepositAmount = async (profileId, amount) => {
         const profile = await Profile.findByPk(profileId);
 
         if (!profile) {
-            throw new Error(`Profile with ID ${profileId} not found`);
+            throw new Error('Profile with ID ${profileId} not found');
         }
 
         const limit = profile.balance * 0.25;

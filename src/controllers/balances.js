@@ -1,4 +1,4 @@
-const { checkDepositAmount, addBalance, removeBalance } = require('./profiles');
+const { checkDepositAmount, addBalance } = require('./profiles');
 
 /**
  * Process of depositing an amount in the balance
@@ -7,8 +7,6 @@ const { checkDepositAmount, addBalance, removeBalance } = require('./profiles');
  * @param {Object} res - The response object.
  */
 const depositAmount = async (req, res) => {
-
-    const { Profile } = req.app.get('models');
 
     const { userId } = req.params;
     const depositAmount = Number(req.get('deposit_amount'));

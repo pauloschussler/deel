@@ -11,6 +11,7 @@ const getUnpaidJobs = async (req, res) => {
 
     const profileId = Number(req.get('profile_id'));
     const { Job } = req.app.get('models');
+    const { Contract } = req.app.get('models');
 
     try {
         const jobs = await Job.findAll({
@@ -68,13 +69,13 @@ const payJob = async (req, res) => {
 
         const contract = await Contract.findByPk(job.ContractId);
 
-        if (! await checkBalance(contract.ContractorId, job.price)) {
+        if (! await checkBalance(contract.ClientId, job.price)) {
 
             return res.status(404).json({ success: true, message: 'Insufficient balance' });
         }
 
-        await removeBalance(contract.ContractorId, job.price);
-        await addBalance(contract.ClientId, job.price);
+        await removeBalance(contract.ClientId, job.price);
+        await addBalance(contract.ContractorId, job.price);
         await confirmPayment(job);
 
         res.json({ success: true, message: 'Job payment successful' });
@@ -91,6 +92,8 @@ const payJob = async (req, res) => {
  */
 const confirmPayment = async (job) => {
     job.paid = true;
+    job.paymentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
     await job.save();
 };
 
