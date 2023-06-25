@@ -96,10 +96,7 @@ const checkDepositAmount = async (profileId, amount) => {
 
         const limit = profile.balance * 0.25;
 
-        console.log(amount <= limit);
-
         return amount <= limit;
-
 
     } catch (error) {
         console.error(error);

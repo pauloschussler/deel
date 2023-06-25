@@ -53,8 +53,11 @@ const payJob = async (req, res) => {
     const { Contract, Job } = req.app.get('models');
 
     const { job_id } = req.params;
+    console.log('test')
+
 
     try {
+
         const job = await Job.findByPk(job_id);
 
         if (!job) {
