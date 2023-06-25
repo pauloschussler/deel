@@ -21,7 +21,7 @@ const getContractById = async (req, res) => {
         });
 
         if (!contracts || contracts.length === 0) {
-            return res.status(404).json({ success: true, total: 0, message: 'No record found' });
+            return res.status(404).json({ success: false, total: 0, message: 'No record found' });
         }
 
         res.json({ success: true, total: 1, data: contracts });
@@ -52,7 +52,7 @@ const getContracts = async (req, res) => {
         });
 
         if (!contracts || contracts.length === 0) {
-            return res.status(404).json({ success: true, total: 0, message: 'No record found' });
+            return res.status(404).json({ success: false, total: 0, message: 'No record found' });
         }
 
         res.json({ success: true, total: contracts.length, data: contracts });

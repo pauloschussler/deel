@@ -15,12 +15,12 @@ const depositAmount = async (req, res) => {
 
         if (!depositAmount) {
 
-            return res.status(404).json({ success: true, message: 'Deposit amount is required' });
+            return res.status(404).json({ success: false, message: 'deposit_amount is required' });
         }
 
         if (! await checkDepositAmount(userId, depositAmount)) {
 
-            return res.status(404).json({ success: true, message: 'Deposit amount exceeds allowed limit' });
+            return res.status(404).json({ success: false, message: 'deposit_amount exceeds allowed limit' });
         }
 
         await addBalance(userId, depositAmount)

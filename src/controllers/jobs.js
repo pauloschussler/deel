@@ -30,7 +30,7 @@ const getUnpaidJobs = async (req, res) => {
         });
 
         if (!jobs || jobs.length === 0) {
-            return res.status(404).json({ success: true, total: 0, message: 'No record found' });
+            return res.status(404).json({ success: false, total: 0, message: 'No record found' });
         }
 
         res.json({ success: true, total: jobs.length, data: jobs });
@@ -62,19 +62,19 @@ const payJob = async (req, res) => {
 
         if (!job) {
 
-            return res.status(404).json({ success: true, message: 'Record not found' });
+            return res.status(404).json({ success: false, message: 'Record not found' });
         }
 
         if (job.paid === true) {
 
-            return res.status(404).json({ success: true, message: 'Job is already paid' });
+            return res.status(404).json({ success: false, message: 'Job is already paid' });
         }
 
         const contract = await Contract.findByPk(job.ContractId);
 
         if (! await checkBalance(contract.ClientId, job.price)) {
 
-            return res.status(404).json({ success: true, message: 'Insufficient balance' });
+            return res.status(404).json({ success: false, message: 'Insufficient balance' });
         }
 
         await removeBalance(contract.ClientId, job.price);
